@@ -1,7 +1,7 @@
 const { request } = require("@octokit/request");
 
 async function asyncCall() {
-  const {createAppAuth} = require("@octokit/auth-app");
+  const { createAppAuth } = require("@octokit/auth-app");
   const auth = createAppAuth({
     id: process.env.APP_ID,
     privateKey: process.env.PRIVATE_KEY,
@@ -17,34 +17,46 @@ async function asyncCall() {
   });
 
   const data = await requestWithAuth("GET /app/installations");
-  // const {data: app} = await requestWithAuth("POST /repos/:owner/:repo/issues", {
-  //   owner: "octocat",
-  //   repo: "hello-world",
-  //   title: "Hello from the engine room"
-  // });
   return data;
 }
 
 function writeRedis(data) {
   console.log(data);
 
-  const redis=require("redis");
-  const rejson = require('redis-rejson');
+  const redis = require("redis");
+  const rejson = require("redis-rejson");
 
   rejson(redis); /* important - this must come BEFORE creating the client */
-  let client= redis.createClient({
-    port:6379,
-    host:'localhost'
+  let client = redis.createClient({
+    port: 6379,
+    host: "redis"
   });
 
-  client.json_set('githubInstallations', '.', JSON.stringify(data), function (err) {
-    if (err) { throw err; }
-    client.json_get('githubInstallations', '.', function (err, value) {
-      if (err) { throw err; }
-      client.quit();
-    });
+  data.data.forEach(function(install) {
+    client.hmset("ghorg:" + install.target_id, [
+      "id",
+      install.id,
+      "repository_selection",
+      install.repository_selection,
+      "access_tokens_url",
+      install.access_tokens_url,
+      "repositories_url",
+      install.repositories_url,
+      "html_url",
+      install.html_url,
+      "app_id",
+      install.app_id,
+      "target_id",
+      install.target_id,
+      "target_type",
+      install.target_type,
+      "created_at",
+      install.created_at
+    ]);
   });
+
+  client.quit();
 }
 asyncCall().then(function(data) {
-  writeRedis(data)
+  writeRedis(data);
 });
