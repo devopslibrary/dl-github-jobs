@@ -1,0 +1,24 @@
+{
+  "name": "kondo-github-machine",
+  "version": "1.0.0",
+  "description": "Backend server that isn't exposed externally, used to make calls to Github App installation API",
+  "main": "app.js",
+  "scripts": {
+    "serve": "node app.js | pino-pretty -i req,res"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devopslibrary/kondo-github-machine.git"
+  },
+  "author": "DevOps Library",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/devopslibrary/kondo-github-machine/issues"
+  },
+  "homepage": "https://github.com/devopslibrary/kondo-github-machine#readme",
+  "dependencies": {
+    "@octokit/auth-app": "^2.3.0",
+    "backpack-core": "^0.8.4",
+    "rollup-plugin-virtual": "^1.0.1"
+  }
+}
