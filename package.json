@@ -19,6 +19,8 @@
   "dependencies": {
     "@octokit/auth-app": "^2.3.0",
     "backpack-core": "^0.8.4",
+    "redis": "^2.8.0",
+    "redis-rejson": "^1.0.0",
     "rollup-plugin-virtual": "^1.0.1"
   }
 }

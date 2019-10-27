@@ -22,7 +22,29 @@ async function asyncCall() {
   //   repo: "hello-world",
   //   title: "Hello from the engine room"
   // });
-  console.log(data);
+  return data;
 }
-console.log("hi");
-asyncCall();
+
+function writeRedis(data) {
+  console.log(data);
+
+  const redis=require("redis");
+  const rejson = require('redis-rejson');
+
+  rejson(redis); /* important - this must come BEFORE creating the client */
+  let client= redis.createClient({
+    port:6379,
+    host:'localhost'
+  });
+
+  client.json_set('githubInstallations', '.', JSON.stringify(data), function (err) {
+    if (err) { throw err; }
+    client.json_get('githubInstallations', '.', function (err, value) {
+      if (err) { throw err; }
+      client.quit();
+    });
+  });
+}
+asyncCall().then(function(data) {
+  writeRedis(data)
+});
