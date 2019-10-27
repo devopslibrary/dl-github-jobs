@@ -4,7 +4,7 @@
   "description": "Backend server that isn't exposed externally, used to make calls to Github App installation API",
   "main": "app.js",
   "scripts": {
-    "serve": "node app.js | pino-pretty -i req,res"
+    "serve": "yarn install && node app.js | pino-pretty -i req,res"
   },
   "repository": {
     "type": "git",
