@@ -1,62 +1,42 @@
-const { request } = require("@octokit/request");
+const getAllGithubApplicationInstalls = require("./jobs/getAllGithubApplicationInstalls");
+const getAllReposInOrg = require("./jobs/getAllReposInOrg");
+const logger = require("pino")({ level: process.env.LOG_LEVEL || "info" });
+const redis = require("async-redis");
+var time = require("time-since");
 
-async function asyncCall() {
-  const { createAppAuth } = require("@octokit/auth-app");
-  const auth = createAppAuth({
-    id: process.env.APP_ID,
-    privateKey: process.env.PRIVATE_KEY,
-    installationId: 123
-  });
-  const requestWithAuth = request.defaults({
-    request: {
-      hook: auth.hook
-    },
-    mediaType: {
-      previews: ["machine-man"]
-    }
-  });
+const client = redis.createClient({
+  port: 6379,
+  host: "localhost"
+});
 
-  const data = await requestWithAuth("GET /app/installations");
-  return data;
+// Run jobs
+async function jobs() {
+  await jobRunner("getAllGithubApplicationInstalls", 30);
+  await jobRunner("getAllReposInOrg", 30);
+  // await client.del("job:getAllReposInOrg");
 }
 
-function writeRedis(data) {
-  console.log(data);
+// My little job runner script
+async function jobRunner(jobName, interval) {
+  let lastRunTime = await client.get("job:" + jobName);
+  if (time.since(lastRunTime).mins() > interval) {
+    logger.info("Starting " + jobName + " job!");
+    await eval(jobName + "(client)").then(function() {
+      logger.info(jobName + " updated Redis successfully");
+      client.set("job:" + jobName, Date.now());
+    });
+  } else {
+    logger.info(
+      "Skipping " +
+        jobName +
+        "job, waiting " +
+        (interval - time.since(lastRunTime).mins()) +
+        " min. before running again"
+    );
+  }
+}
 
-  const redis = require("redis");
-  const rejson = require("redis-rejson");
-
-  rejson(redis); /* important - this must come BEFORE creating the client */
-  let client = redis.createClient({
-    port: 6379,
-    host: "redis"
-  });
-
-  data.data.forEach(function(install) {
-    client.hmset("ghorg:" + install.target_id, [
-      "id",
-      install.id,
-      "repository_selection",
-      install.repository_selection,
-      "access_tokens_url",
-      install.access_tokens_url,
-      "repositories_url",
-      install.repositories_url,
-      "html_url",
-      install.html_url,
-      "app_id",
-      install.app_id,
-      "target_id",
-      install.target_id,
-      "target_type",
-      install.target_type,
-      "created_at",
-      install.created_at
-    ]);
-  });
-
+// Close Redis at the End
+jobs().then(function() {
   client.quit();
-}
-asyncCall().then(function(data) {
-  writeRedis(data);
 });
