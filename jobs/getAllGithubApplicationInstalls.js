@@ -3,7 +3,9 @@ const logger = require("pino")({ level: process.env.LOG_LEVEL || "info" });
 
 async function getAllGithubApplicationInstalls(client) {
   const data = await githubRequest("GET /app/installations");
-  logger.info("getAllGithubApplicationInstalls: Retrieved all installations from Github");
+  logger.info(
+    "getAllGithubApplicationInstalls: Retrieved all installations from Github"
+  );
   logger.info(data);
   data.data.forEach(function(install) {
     client.hmset("ghorg:" + install.target_id, [

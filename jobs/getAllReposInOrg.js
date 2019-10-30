@@ -2,7 +2,6 @@ const logger = require("pino")({ level: process.env.LOG_LEVEL || "info" });
 const { request } = require("@octokit/request");
 const { createAppAuth } = require("@octokit/auth-app");
 
-
 async function getAllReposInOrg(client) {
   orgs = await client.scan(0, "MATCH", "ghorg:*");
   for (const org of orgs[1]) {
@@ -12,8 +11,13 @@ async function getAllReposInOrg(client) {
     // Get Installation Id
     const orgData = await client.hgetall(org);
     logger.debug(orgData);
-    const installationId = orgData.installation_id
-    logger.debug("getAllReposInOrg: Installation Id for " + orgData.name + " is " + installationId)
+    const installationId = orgData.installation_id;
+    logger.debug(
+      "getAllReposInOrg: Installation Id for " +
+        orgData.name +
+        " is " +
+        installationId
+    );
 
     // Get Installation Token
     const auth = createAppAuth({
@@ -32,14 +36,18 @@ async function getAllReposInOrg(client) {
     const installationAuthentication = await auth({ type: "installation" });
 
     // Get Repos
-    logger.info('getAllReposInOrg: Retrieving repos')
+    logger.info("getAllReposInOrg: Retrieving repos");
     const repos = await request("GET /orgs/" + orgData.name + "/repos", {
       headers: {
         authorization: `token ${installationAuthentication.token}`,
         accept: "application/vnd.github.machine-man-preview+json"
-      },
+      }
     });
-    logger.debug("Rate Limit Remaining: " + repos.headers['x-ratelimit-remaining'] + "/5000")
+    logger.debug(
+      "Rate Limit Remaining: " +
+        repos.headers["x-ratelimit-remaining"] +
+        "/5000"
+    );
 
     for (const repo of repos.data) {
       client.hmset("ghrepo:" + orgData.target_id + ":repos:" + repo.name, [
