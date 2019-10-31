@@ -1,0 +1,32 @@
+mutation UpsertRepo(
+  $id: Int!
+  $name: String!
+  $orgId: Int!
+  $fullName: String!
+  $createdAt: Datetime!
+  $updatedAt: Datetime!
+) {
+  __typename
+  upsertRepo(
+    input: {
+      repo: {
+        id: $id
+        name: $name
+        orgId: $orgId
+        fullName: $fullName
+        createdAt: $createdAt
+        updatedAt: $updatedAt
+      }
+    }
+    where: { id: $id }
+  ) {
+    repo {
+      id
+      name
+      orgId
+      fullName
+      createdAt
+      updatedAt
+    }
+  }
+}

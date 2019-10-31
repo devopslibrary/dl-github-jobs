@@ -1,0 +1,29 @@
+mutation UpsertOrg(
+  $id: Int!
+  $name: String!
+  $installationId: Int!
+  $createdAt: Datetime!
+  $updatedAt: Datetime!
+) {
+  __typename
+  upsertOrg(
+    input: {
+      org: {
+        id: $id
+        name: $name
+        installationId: $installationId
+        updatedAt: $updatedAt
+        createdAt: $createdAt
+      }
+    }
+    where: { id: $id }
+  ) {
+    org {
+      id
+      createdAt
+      installationId
+      name
+      updatedAt
+    }
+  }
+}

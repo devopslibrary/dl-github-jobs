@@ -1,8 +1,8 @@
-const getAllGithubApplicationInstalls = require("./jobs/getAllGithubApplicationInstalls");
-const getAllReposInOrg = require("./jobs/getAllReposInOrg");
+const updateAllGithubApplicationInstalls = require("./jobs/updateAllGithubApplicationInstalls");
+const updateAllReposInOrg = require("./jobs/updateAllReposInOrg");
 const logger = require("pino")({ level: process.env.LOG_LEVEL || "info" });
 const redis = require("async-redis");
-var time = require("time-since");
+const time = require("time-since");
 
 const client = redis.createClient({
   port: 6379,
@@ -11,9 +11,9 @@ const client = redis.createClient({
 
 // Run jobs
 async function jobs() {
-  await jobRunner("getAllGithubApplicationInstalls", 30);
-  await jobRunner("getAllReposInOrg", 30);
-  // await client.del("job:getAllReposInOrg");
+  await jobRunner("updateAllGithubApplicationInstalls", 30);
+  await jobRunner("updateAllReposInOrg", 30);
+  // await client.del("job:updateAllReposInOrg");
 }
 
 // My little job runner script
@@ -22,7 +22,7 @@ async function jobRunner(jobName, interval) {
   if (time.since(lastRunTime).mins() > interval) {
     logger.info("Starting " + jobName + " job!");
     await eval(jobName + "(client)").then(function() {
-      logger.info(jobName + " updated Redis successfully");
+      logger.info(jobName + " updated DB successfully");
       client.set("job:" + jobName, Date.now());
     });
   } else {

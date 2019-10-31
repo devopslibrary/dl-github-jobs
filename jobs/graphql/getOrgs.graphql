@@ -1,0 +1,11 @@
+query GetOrgs {
+  allOrgs {
+    nodes {
+      id
+      name
+      installationId
+      createdAt
+      updatedAt
+    }
+  }
+}
