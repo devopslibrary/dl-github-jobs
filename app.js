@@ -3,10 +3,11 @@ const updateAllReposInOrg = require("./jobs/updateAllReposInOrg");
 const logger = require("pino")({ level: process.env.LOG_LEVEL || "info" });
 const redis = require("async-redis");
 const time = require("time-since");
+require("dotenv").config(); // this is important!
 
 const client = redis.createClient({
   port: 6379,
-  host: "localhost"
+  host: process.env.REDIS_HOST
 });
 
 // Run jobs

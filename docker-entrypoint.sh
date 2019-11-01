@@ -1,5 +1,7 @@
 #!/bin/sh
-export PRIVATE_KEY=`cat kondo-io.2019-10-26.private-key.pem`
-export APP_ID=30108
+
+echo 'Waiting for dl-database-api to come up...'
+/wait
+
 yarn serve
 echo 'Finished'

@@ -20,6 +20,7 @@
     "@octokit/auth-app": "^2.3.0",
     "async-redis": "^1.1.7",
     "backpack-core": "^0.8.4",
+    "dotenv": "^8.2.0",
     "graphql-request": "^1.8.2",
     "pino": "^5.13.5",
     "redis-rejson": "^1.0.0",

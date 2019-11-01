@@ -2,6 +2,7 @@ const githubRequest = require("../utils/githubRequest");
 const logger = require("pino")({level: process.env.LOG_LEVEL || "info"});
 const {request, GraphQLClient} = require('graphql-request')
 const {readFileSync} = require('fs')
+require("dotenv").config(); // this is important!
 
 async function updateAllGithubApplicationInstalls(client) {
   const data = await githubRequest("GET /app/installations");
@@ -13,7 +14,7 @@ async function updateAllGithubApplicationInstalls(client) {
   for (const install of data.data) {
     // Create Org
     const query = readFileSync(__dirname + '/graphql/upsertOrg.graphql', 'utf8')
-    const data = await request('http://localhost:8080/graphql', query, {
+    const data = await request(process.env.DATABASE_API, query, {
       id: install.target_id,
       name: install.account.login,
       installationId: install.id,
