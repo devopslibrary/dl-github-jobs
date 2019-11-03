@@ -1,3 +1,5 @@
+"use strict";
+
 const updateAllGithubApplicationInstalls = require("./jobs/updateAllGithubApplicationInstalls");
 const updateAllReposInOrg = require("./jobs/updateAllReposInOrg");
 const logger = require("pino")({ level: process.env.LOG_LEVEL || "info" });

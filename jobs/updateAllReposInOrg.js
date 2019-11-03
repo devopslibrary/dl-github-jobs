@@ -1,13 +1,15 @@
+"use strict";
+
 const logger = require("pino")({ level: process.env.LOG_LEVEL || "info" });
 const githubRequest = require("@octokit/request").request;
 const { createAppAuth } = require("@octokit/auth-app");
-const {request, GraphQLClient} = require('graphql-request')
-const {readFileSync} = require('fs')
+const { request, GraphQLClient } = require("graphql-request");
+const { readFileSync } = require("fs");
 require("dotenv").config(); // this is important!
 
 async function updateAllReposInOrg(client) {
   // Get Orgs
-  const query = readFileSync(__dirname + '/graphql/getOrgs.graphql', 'utf8')
+  const query = readFileSync(__dirname + "/graphql/getOrgs.graphql", "utf8");
   const orgs = await request(process.env.DATABASE_API, query);
 
   for (const org of orgs.allOrgs.nodes) {
@@ -46,7 +48,10 @@ async function updateAllReposInOrg(client) {
     );
 
     for (const repo of repos.data) {
-      const query = readFileSync(__dirname + '/graphql/upsertRepo.graphql', 'utf8')
+      const query = readFileSync(
+        __dirname + "/graphql/upsertRepo.graphql",
+        "utf8"
+      );
       const data = await request(process.env.DATABASE_API, query, {
         id: repo.id,
         name: repo.name,

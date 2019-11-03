@@ -1,3 +1,5 @@
+"use strict";
+
 const { request } = require("@octokit/request");
 const { createAppAuth } = require("@octokit/auth-app");
 
