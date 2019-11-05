@@ -18,7 +18,6 @@
   "homepage": "https://github.com/devopslibrary/kondo-github-machine#readme",
   "dependencies": {
     "@octokit/auth-app": "^2.3.0",
-    "async-redis": "^1.1.7",
     "dotenv": "^8.2.0",
     "graphql-request": "^1.8.2",
     "pino": "^5.13.5",

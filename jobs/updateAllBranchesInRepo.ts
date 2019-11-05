@@ -5,9 +5,9 @@ const { request } = require("graphql-request");
 const { readFileSync } = require("fs");
 require("dotenv").config(); // this is important!
 
-async function updateAllReposInOrg() {
+async function updateAllBranchesInRepo() {
   // Get Orgs
-  const query = readFileSync(__dirname + "/graphql/getOrgs.graphql", "utf8");
+  const query = readFileSync(__dirname + "/graphql/getRepos.graphql", "utf8");
   const orgs = await request(process.env.DATABASE_API, query);
 
   for (const org of orgs.allOrgs.nodes) {
@@ -56,4 +56,4 @@ async function updateAllReposInOrg() {
   }
 }
 
-export = updateAllReposInOrg;
+export = updateAllBranchesInRepo;

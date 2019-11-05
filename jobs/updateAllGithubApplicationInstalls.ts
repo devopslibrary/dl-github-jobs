@@ -4,7 +4,7 @@ import { request } from "graphql-request";
 const { readFileSync } = require("fs");
 require("dotenv").config(); // this is important!
 
-async function updateAllGithubApplicationInstalls(client) {
+async function updateAllGithubApplicationInstalls() {
   const data = await githubRequest("GET /app/installations");
   logger.info(
     "updateAllGithubApplicationInstalls: Retrieved all installations"
