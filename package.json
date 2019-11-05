@@ -4,7 +4,7 @@
   "description": "Backend server that isn't exposed externally, used to make calls to Github App installation API",
   "main": "app.js",
   "scripts": {
-    "serve": "yarn install && node app.js | pino-pretty -i req,res"
+    "serve": "yarn install && ts-node app.ts | pino-pretty -i req,res"
   },
   "repository": {
     "type": "git",
@@ -19,12 +19,15 @@
   "dependencies": {
     "@octokit/auth-app": "^2.3.0",
     "async-redis": "^1.1.7",
-    "backpack-core": "^0.8.4",
     "dotenv": "^8.2.0",
     "graphql-request": "^1.8.2",
     "pino": "^5.13.5",
-    "redis-rejson": "^1.0.0",
     "rollup-plugin-virtual": "^1.0.1",
-    "time-since": "^1.0.7"
+    "time-since": "^1.0.7",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.6.4"
+  },
+  "devDependencies": {
+    "@types/pino": "^5.8.13"
   }
 }

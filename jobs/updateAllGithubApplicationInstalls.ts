@@ -1,8 +1,6 @@
-"use strict";
-
-const githubRequest = require("../utils/githubRequest");
-const logger = require("pino")({ level: process.env.LOG_LEVEL || "info" });
-const { request, GraphQLClient } = require("graphql-request");
+import { logger } from "../utils/Logger";
+import githubRequest = require("../utils/githubRequest");
+import { request } from "graphql-request";
 const { readFileSync } = require("fs");
 require("dotenv").config(); // this is important!
 
@@ -11,7 +9,7 @@ async function updateAllGithubApplicationInstalls(client) {
   logger.info(
     "updateAllGithubApplicationInstalls: Retrieved all installations"
   );
-  logger.info(data);
+  logger.debug(data);
 
   for (const install of data.data) {
     // Create Org
@@ -26,9 +24,12 @@ async function updateAllGithubApplicationInstalls(client) {
       createdAt: install.created_at,
       updatedAt: new Date()
     });
-    console.debug("updateAllGithubApplicationInstalls: Updated data: ");
-    console.debug(data);
+    logger.info(
+      "updateAllGithubApplicationInstalls: Updated data for " +
+        install.account.login
+    );
+    logger.debug(data);
   }
 }
 
-module.exports = updateAllGithubApplicationInstalls;
+export = updateAllGithubApplicationInstalls;

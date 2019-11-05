@@ -1,9 +1,7 @@
-"use strict";
-
-const logger = require("pino")({ level: process.env.LOG_LEVEL || "info" });
+import { logger } from "../utils/Logger";
 const githubRequest = require("@octokit/request").request;
 const { createAppAuth } = require("@octokit/auth-app");
-const { request, GraphQLClient } = require("graphql-request");
+const { request } = require("graphql-request");
 const { readFileSync } = require("fs");
 require("dotenv").config(); // this is important!
 
@@ -22,14 +20,7 @@ async function updateAllReposInOrg(client) {
       privateKey: process.env.PRIVATE_KEY,
       installationId: org.installationId
     });
-    const gh = githubRequest.defaults({
-      request: {
-        hook: auth.hook
-      },
-      mediaType: {
-        previews: ["machine-man"]
-      }
-    });
+
     const installationAuthentication = await auth({ type: "installation" });
 
     // Get Repos
@@ -52,7 +43,7 @@ async function updateAllReposInOrg(client) {
         __dirname + "/graphql/upsertRepo.graphql",
         "utf8"
       );
-      const data = await request(process.env.DATABASE_API, query, {
+      await request(process.env.DATABASE_API, query, {
         id: repo.id,
         name: repo.name,
         orgId: org.id,
@@ -60,8 +51,9 @@ async function updateAllReposInOrg(client) {
         createdAt: repo.created_at,
         updatedAt: new Date()
       });
+      logger.info("updateAllReposInOrg: Finished updating repo: " + repo.name);
     }
   }
 }
 
-module.exports = updateAllReposInOrg;
+export = updateAllReposInOrg;

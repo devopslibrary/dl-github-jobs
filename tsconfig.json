@@ -4,6 +4,10 @@
     "target": "es5",
     "sourceMap": true
   },
+  "forceConsistentCasingInFileNames": true,
+  "noImplicitReturns": true,
+  "strict": true,
+  "noUnusedLocals": true,
   "exclude": [
     "node_modules"
   ]
