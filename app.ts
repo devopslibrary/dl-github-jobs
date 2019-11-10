@@ -14,7 +14,7 @@ const client = redis.createClient({
 async function jobs() {
   const orgs = await getGithubOrgs(client);
   const repos = await getGithubRepos(client, orgs);
-  //const branches = await getGithubBranches(client, orgs, repos);
+  const branches = await getGithubBranches(client, orgs, repos);
 }
 
 // Close Redis at the End

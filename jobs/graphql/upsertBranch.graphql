@@ -1,0 +1,32 @@
+mutation UpsertBranch(
+  $id: String!
+  $name: String!
+  $repoId: Int!
+  $lastCommitDate: Datetime!
+  $protected: Boolean!
+  $lastSynced: Datetime!
+) {
+  __typename
+  upsertBranch(
+    input: {
+      branch: {
+        id: $id
+        name: $name
+        repoId: $repoId
+        lastCommitDate: $lastCommitDate
+        protected: $protected
+        lastSynced: $lastSynced
+      }
+    }
+    where: { id: $id }
+  ) {
+    branch {
+      id
+      name
+      repoId
+      lastCommitDate
+      protected
+      lastSynced
+    }
+  }
+}
