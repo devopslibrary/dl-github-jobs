@@ -5,4 +5,5 @@ export interface Branch {
   lastCommitDate: Date;
   createdAt: Date;
   updatedAt: Date;
+  lastSynced: Date;
 }

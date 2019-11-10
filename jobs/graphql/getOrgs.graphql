@@ -6,6 +6,7 @@ query GetOrgs {
       installationId
       createdAt
       updatedAt
+      lastSynced
     }
   }
 }

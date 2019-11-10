@@ -5,6 +5,8 @@ mutation UpsertRepo(
   $fullName: String!
   $createdAt: Datetime!
   $updatedAt: Datetime!
+  $lastSynced: Datetime!
+  $defaultBranch: String!
 ) {
   __typename
   upsertRepo(
@@ -16,6 +18,8 @@ mutation UpsertRepo(
         fullName: $fullName
         createdAt: $createdAt
         updatedAt: $updatedAt
+        lastSynced: $lastSynced
+        defaultBranch: $defaultBranch
       }
     }
     where: { id: $id }
@@ -27,6 +31,8 @@ mutation UpsertRepo(
       fullName
       createdAt
       updatedAt
+      lastSynced
+      defaultBranch
     }
   }
 }

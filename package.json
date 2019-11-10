@@ -4,7 +4,7 @@
   "description": "Backend server that isn't exposed externally, used to make calls to Github App installation API",
   "main": "app.js",
   "scripts": {
-    "serve": "yarn install && ts-node app.ts | pino-pretty -i req,res"
+    "serve": "yarn install && ts-node app.ts | pino-pretty -i req,res,module "
   },
   "repository": {
     "type": "git",
@@ -18,11 +18,14 @@
   "homepage": "https://github.com/devopslibrary/kondo-github-machine#readme",
   "dependencies": {
     "@octokit/auth-app": "^2.3.0",
+    "async-redis": "^1.1.7",
     "dotenv": "^8.2.0",
     "graphql-request": "^1.8.2",
+    "moment": "^2.24.0",
     "pino": "^5.13.5",
     "rollup-plugin-virtual": "^1.0.1",
     "time-since": "^1.0.7",
+    "toml": "^3.0.0",
     "ts-node": "^8.4.1",
     "typescript": "^3.6.4"
   },

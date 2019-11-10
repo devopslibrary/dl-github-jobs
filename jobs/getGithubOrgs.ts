@@ -1,39 +1,35 @@
-import { logger } from "../utils/Logger";
+import { parentLogger } from "../utils/Logger";
 import { Org } from "../types/org";
-import githubRequest = require("../utils/githubRequest");
 import { request } from "graphql-request";
-const { readFileSync } = require("fs");
-const { createAppAuth } = require("@octokit/auth-app");
-require("dotenv").config(); // this is important!
+import { readFileSync } from "fs";
+const logger = parentLogger.child({ module: "getGithubOrgs" });
+import { githubRequest } from "../utils/githubRequest";
+require("dotenv").config();
 
-async function getGithubOrgs(): Promise<Org[]> {
-  const data = await githubRequest("GET /app/installations");
-  logger.info("getGithubOrgs: Retrieved all installations");
-  logger.debug(data);
+async function getGithubOrgs(client): Promise<Org[]> {
   var orgs: Org[] = [];
 
-  for (const install of data.data) {
-    // Get Installation Token
-    const auth = await createAppAuth({
-      id: process.env.APP_ID,
-      privateKey: process.env.PRIVATE_KEY,
-      installationId: install.id
-    });
-    const installationAuthentication = await auth({ type: "installation" });
+  // Get Installations
+  const data = await githubRequest(
+    "GET /app/installations",
+    client,
+    "installations"
+  );
 
+  // Update Database
+
+  for (const install of data.data) {
     // Create Org Object
     const org = {
       name: install.account.login,
       id: install.target_id,
       installationId: install.id,
       createdAt: install.created_at,
-      updatedAt: new Date(),
-      token: installationAuthentication.token
+      updatedAt: install.updated_at,
+      lastSynced: new Date()
     };
-    logger.debug(org);
-
-    // Update Database (Aside from Ephemeral Token)
-    const data = await request(
+    // logger.debug(org);
+    await request(
       process.env.DATABASE_API,
       readFileSync(__dirname + "/graphql/upsertOrg.graphql", "utf8"),
       {
@@ -41,13 +37,14 @@ async function getGithubOrgs(): Promise<Org[]> {
         name: org.name,
         installationId: org.installationId,
         createdAt: org.createdAt,
-        updatedAt: org.updatedAt
+        updatedAt: org.updatedAt,
+        lastSynced: new Date()
       }
-    );
-
-    logger.info("getGithubOrgs: Updated data for " + org.name);
+    ).then;
+    logger.info("Updated data for " + org.name);
     orgs.push(org);
   }
+
   return orgs;
 }
 

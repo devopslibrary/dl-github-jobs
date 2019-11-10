@@ -7,5 +7,6 @@ export interface Repo {
   fullName: string;
   createdAt: Date;
   updatedAt: Date; // When did we last check for updates?
-  branches: Branch[]; // List of branches
+  defaultBranch: string; // List of branches
+  lastSynced: Date;
 }

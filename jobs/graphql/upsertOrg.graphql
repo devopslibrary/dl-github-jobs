@@ -4,6 +4,7 @@ mutation UpsertOrg(
   $installationId: Int!
   $createdAt: Datetime!
   $updatedAt: Datetime!
+  $lastSynced: Datetime!
 ) {
   __typename
   upsertOrg(
@@ -14,6 +15,7 @@ mutation UpsertOrg(
         installationId: $installationId
         updatedAt: $updatedAt
         createdAt: $createdAt
+        lastSynced: $lastSynced
       }
     }
     where: { id: $id }
@@ -24,6 +26,7 @@ mutation UpsertOrg(
       installationId
       name
       updatedAt
+      lastSynced
     }
   }
 }
