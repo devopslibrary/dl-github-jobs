@@ -1,4 +1,4 @@
-import * as pino from "pino";
+import pino from "pino";
 
 export const parentLogger = pino({
   name: "dl-github-jobs",

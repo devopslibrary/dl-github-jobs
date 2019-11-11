@@ -16,7 +16,7 @@ async function getGithubBranches(
   var branches: Branch[] = [];
   for (const repo of repos) {
     // Get org of repo
-    const org = orgs.find(org => org.id == repo.orgId);
+    const org = orgs.find(o => o.id == repo.orgId);
 
     // Get Branches
     logger.info("Retrieving branches for " + repo.name);

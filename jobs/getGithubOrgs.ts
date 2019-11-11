@@ -29,7 +29,7 @@ async function getGithubOrgs(client): Promise<Org[]> {
       lastSynced: new Date()
     };
     // logger.debug(org);
-    await request(
+    request(
       process.env.DATABASE_API,
       readFileSync(__dirname + "/graphql/upsertOrg.graphql", "utf8"),
       {
@@ -40,7 +40,7 @@ async function getGithubOrgs(client): Promise<Org[]> {
         updatedAt: org.updatedAt,
         lastSynced: new Date()
       }
-    ).then;
+    );
     logger.info("Updated data for " + org.name);
     orgs.push(org);
   }

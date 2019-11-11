@@ -16,7 +16,7 @@ async function getInstallationToken(
       "installationToken either expired or not present, requesting new one for " +
         installationId
     );
-    const auth = await createAppAuth({
+    const auth = createAppAuth({
       id: parseInt(process.env.APP_ID),
       privateKey: process.env.PRIVATE_KEY,
       installationId: installationId
