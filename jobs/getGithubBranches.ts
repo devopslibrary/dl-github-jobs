@@ -36,13 +36,22 @@ async function getGithubBranches(
         org.installationId
       );
 
+      // Detect if branch is protected
+      let branchProtected: boolean = false;
+      if (repo.defaultBranch == branchData.data.name) {
+        branchProtected = true;
+      }
+      if (branchData.data.protected) {
+        branchProtected = true;
+      }
+
       // Create Org Object
       const branch = {
         id: branchData.data.commit.node_id,
         name: branchData.data.name,
         repoId: repo.id,
         lastCommitDate: new Date(branchData.data.commit.commit.committer.date),
-        protected: branchData.data.protected,
+        protected: branchProtected,
         lastSynced: new Date()
       };
 
