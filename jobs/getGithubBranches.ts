@@ -45,9 +45,9 @@ async function getGithubBranches(
         branchProtected = true;
       }
 
-      // Create Org Object
+      // Create Branch Object
       const branch = {
-        id: branchData.data.commit.node_id,
+        id: branchData.data.name + "-" + branchData.data.commit.node_id, // Add name as node_id is NOT unique for each branch!
         name: branchData.data.name,
         repoId: repo.id,
         lastCommitDate: new Date(branchData.data.commit.commit.committer.date),
@@ -60,7 +60,7 @@ async function getGithubBranches(
         process.env.DATABASE_API,
         readFileSync(__dirname + "/graphql/upsertBranch.graphql", "utf8"),
         {
-          id: branch.id,
+          id: branchData.data.name + "-" + branchData.data.commit.node_id, // Add name as node_id is NOT unique for each branch!
           name: branch.name,
           repoId: branch.repoId,
           lastCommitDate: branch.lastCommitDate,
