@@ -21,7 +21,7 @@
     "async-redis": "^1.1.7",
     "dotenv": "^8.2.0",
     "graphql-request": "^1.8.2",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "pino": "^5.13.5",
     "rollup-plugin-virtual": "^1.0.1",
     "time-since": "^1.0.7",
